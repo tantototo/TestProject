@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,35 +8,59 @@ namespace TestProjectEF
 {
     public class AccountServices : IAccountServices
     {
-        private List<Account> accounts = new List<Account>();
-        int curSum; //для хранения суммы
+        AppContext db = new AppContext();
 
-        public int CurrentSum { get { return curSum; } }
-
-        public void Put(int sum) { curSum += sum; }
-
-        public void Withdraw(int sum)
+        public void Put(Account account, int sum)
         {
-            if (curSum >= sum)
+            account.Sum += sum;
+            account.Histories.Add(new History
             {
-                curSum -= sum;
+                Operation = History.Operations.Put,
+                OperDate = DateTime.Now,
+                Sum = sum,
+                Account = account
+            });
+
+            Update(account);
+        }
+        public void Withdraw(Account account, int sum)
+        {
+            if (account.Sum >= sum)
+            {
+                account.Sum -= sum;
+                account.Histories.Add(new History
+                {
+                    Operation = History.Operations.Withdraw,
+                    OperDate = DateTime.Now,
+                    Sum = sum,
+                    Account = account
+                });
+
+                Update(account);
             }
         }
         
         public void Add(Account account)
         {
-            accounts.Add(account);
+            db.Accounts.Add(account);
+            db.SaveChanges();
         }
-
         public IEnumerable<Account> Find(string search)
         {
-            IEnumerable<Account> results = accounts.FindAll(x => x.AccNumber.Contains(search));
+            var results = db.Accounts.Where(a => EF.Functions.Like(a.Person.Name, $"%{search}%")
+            || EF.Functions.Like(a.Person.Passport, $"%{search}%") || EF.Functions.Like(a.AccNumber, $"%{search}%")).ToList();
+
             return results;
         }
-
+        public void Update(Account account)
+        {
+            db.Accounts.Update(account);
+            db.SaveChanges();
+        }
         public void Delete(Account account)
         {
-            accounts.Remove(account);
+            db.Accounts.Remove(account);
+            db.SaveChanges();
         }
 
     }

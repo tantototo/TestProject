@@ -5,9 +5,9 @@ namespace TestProjectEF
 {
     internal class AppContext : DbContext
     {
+        //public DbSet<History> Histories { get; set; } = null!;
         public DbSet<Account> Accounts { get; set; } = null!;
         public DbSet<Person> Persons { get; set; } = null!;
-        //public DbSet<History> Histories { get; set; } = null!;
 
         public AppContext()
         {
@@ -26,10 +26,11 @@ namespace TestProjectEF
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Account>()
-            .HasOne(a => a.Person)
-            .WithMany(p => p.Accounts)
-            .HasForeignKey(a => a.PersonId);
+            //modelBuilder.Entity<Account>()
+            //.HasOne(a => a.Person)
+            //.WithMany(p => p.Accounts)
+            //.HasForeignKey(a => a.PersonId);
+           
         }
     }
 }

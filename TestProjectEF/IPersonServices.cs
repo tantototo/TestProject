@@ -13,7 +13,7 @@ namespace TestProjectEF
 
         void Add(Person person);
         IEnumerable<Person> Find(string search);
-        Person Change(Person person);
+        void Update(Person person);
         void Delete(Person person);
     }
 }
