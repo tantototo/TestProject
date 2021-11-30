@@ -7,6 +7,7 @@ namespace TestProjectEF
     class Program
     {
         static IPersonServices service = new PersonServices();
+        static IAccountServices accService = new AccountServices();
 
         static void Main(string[] args)
         {
@@ -37,13 +38,13 @@ namespace TestProjectEF
                     FindPerson();
                     break;
                 case 3:
-                   // Console.WriteLine($"Сумма на счету: {FindUsedPerson().CurrentSum}");
+                    Console.WriteLine($"Сумма на счету: {FindAccount().Sum}");
                     break;
                 case 4:
-                   // FindUsedPerson().Put(GetSum());
+                    accService.Put(FindAccount(), GetSum());
                     break;
                 case 5:
-                   // FindUsedPerson().Withdraw(GetSum());
+                    accService.Withdraw(FindAccount(), GetSum());
                     break;
                 case 6:
                     service.Delete(FindUsedPerson());
@@ -77,13 +78,13 @@ namespace TestProjectEF
         static Person GetPerson()
         {
             Console.Write("Введите имя клиента банка: ");
-            string? name = Console.ReadLine();
+            var name = Console.ReadLine();
             Console.Write("Введите возраст: ");
             int age = ReadNumber();
 
             string text = "Введите номер паспорта: ";
             Console.Write(text);
-            string? pas = Console.ReadLine();
+            var pas = Console.ReadLine();
             while (CheckPassport(pas))
             {
                 Console.Write(text);
@@ -91,8 +92,25 @@ namespace TestProjectEF
             }
 
             //var person = new Person(name, age, pas);
-            var person = new Person{ Name = name, Age = age, Passport = pas };
+            var person = new Person { Name = name, Age = age, Passport = pas };
+            person.Accounts.Add(new Account { Sum = 0, AccNumber = GenerateAccNumber(), Person = person });
             return person;
+        }
+
+        static Account FindAccount()
+        {
+            string text = "Введите строку для поиска: ";
+            Console.Write(text);
+            var result = accService.Find(Console.ReadLine());
+            while (result.Count() != 1)
+            {
+                Console.Write(text);
+                result = accService.Find(Console.ReadLine());
+            }
+
+            var enumerator = result.GetEnumerator();
+            enumerator.MoveNext();
+            return enumerator.Current;
         }
 
         static Person FindUsedPerson()
@@ -139,6 +157,18 @@ namespace TestProjectEF
             {
                 return false;
             }
+        }
+
+        static string GenerateAccNumber()
+        {
+            Random rand = new Random();
+            String card = "BE";
+            for (int i = 0; i < 14; i++)
+            {
+                int n = rand.Next(10) + 0;
+                card += n.ToString();
+            }
+            return card;
         }
 
     }

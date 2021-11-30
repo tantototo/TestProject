@@ -12,8 +12,8 @@ using TestProjectEF;
 namespace TestProjectEF.Migrations
 {
     [DbContext(typeof(AppContext))]
-    [Migration("20211126192733_First")]
-    partial class First
+    [Migration("20211130163839_F")]
+    partial class F
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -38,7 +38,7 @@ namespace TestProjectEF.Migrations
                     b.Property<int?>("PersonId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("curSum")
+                    b.Property<int?>("Sum")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -46,6 +46,33 @@ namespace TestProjectEF.Migrations
                     b.HasIndex("PersonId");
 
                     b.ToTable("Accounts");
+                });
+
+            modelBuilder.Entity("TestProjectEF.History", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int?>("AccountId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("OperDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Operation")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Sum")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
+
+                    b.ToTable("History");
                 });
 
             modelBuilder.Entity("TestProjectEF.Person", b =>
@@ -77,6 +104,20 @@ namespace TestProjectEF.Migrations
                         .HasForeignKey("PersonId");
 
                     b.Navigation("Person");
+                });
+
+            modelBuilder.Entity("TestProjectEF.History", b =>
+                {
+                    b.HasOne("TestProjectEF.Account", "Account")
+                        .WithMany("Histories")
+                        .HasForeignKey("AccountId");
+
+                    b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("TestProjectEF.Account", b =>
+                {
+                    b.Navigation("Histories");
                 });
 
             modelBuilder.Entity("TestProjectEF.Person", b =>

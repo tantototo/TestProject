@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace TestProjectEF.Migrations
 {
-    public partial class First : Migration
+    public partial class F : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -30,7 +31,7 @@ namespace TestProjectEF.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AccNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    curSum = table.Column<int>(type: "int", nullable: true),
+                    Sum = table.Column<int>(type: "int", nullable: true),
                     PersonId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -43,14 +44,43 @@ namespace TestProjectEF.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "History",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Operation = table.Column<int>(type: "int", nullable: false),
+                    OperDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Sum = table.Column<int>(type: "int", nullable: true),
+                    AccountId = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_History", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_History_Accounts_AccountId",
+                        column: x => x.AccountId,
+                        principalTable: "Accounts",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Accounts_PersonId",
                 table: "Accounts",
                 column: "PersonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_History_AccountId",
+                table: "History",
+                column: "AccountId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "History");
+
             migrationBuilder.DropTable(
                 name: "Accounts");
 

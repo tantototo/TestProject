@@ -11,15 +11,19 @@ namespace TestProjectEF
     {
         public int Id { get; set; }
         public string? AccNumber { get; set; }
-        public int? curSum { get; set; }
+        public int? Sum { get; set; }
 
         public int? PersonId { get; set; }
         public Person? Person { get; set; }
 
-        //public Account(string accNumber, Person person)
+        public List<History> Histories { get; set; } = new();
+
+        //public Account(Person person)
         //{
-        //    AccNumber = accNumber;
+        //    //AccNumber = GenerateAccNumber();
+        //    Sum = 0;
         //    Person = person;
         //}
+
     }
 }
