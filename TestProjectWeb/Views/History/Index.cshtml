@@ -1,0 +1,61 @@
+﻿@model IEnumerable<TestProjectWeb.Models.History>
+    @{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">History</h2>
+        </div>
+    </div>
+</div>
+
+<table class="table table-bordered table-striped" style="width:100%">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OperDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Sum)
+            </th>
+@*            <th>
+                @Html.DisplayNameFor(model => model.Operation)
+            </th>*@
+@*            <th>
+                @Html.DisplayNameFor(model => model.Account)
+            </th>*@
+            @*<th></th>*@
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OperDate)
+                </td>
+                <td>
+                    @if (item.Operation == History.Operations.Put)
+                    {
+                        <i class="bi bi-plus-lg" style="color:#02a151; font-style: normal"> @Html.DisplayFor(modelItem => item.Sum)</i>
+                    }
+                    else
+                    {
+                        <i class="bi bi-dash-lg" style="font-style: normal"> @Html.DisplayFor(modelItem => item.Sum)</i>
+                    }
+                </td>
+   @*             <td>
+                    @Html.DisplayFor(modelItem => item.Operation)
+                </td>*@
+   @*             <td>
+                    @Html.DisplayFor(modelItem => item.Account.Id)
+                </td>*@
+   @*             <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> 
+                </td>*@
+            </tr>
+        }
+    </tbody>
+</table>
