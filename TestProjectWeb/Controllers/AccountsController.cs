@@ -23,8 +23,9 @@ namespace TestProjectWeb.Controllers
         public async Task<IActionResult> Index(int? id)
         {
             //var appDBContext = _context.Accounts.Include(a => a.Person);
-            var appDBContext2 = _context.Accounts.Where(a => a.PersonId == id);
-            return View(await appDBContext2.ToListAsync());
+
+            var appDBContext = _context.Accounts.Where(a => a.PersonId == id);
+            return View(await appDBContext.ToListAsync());
         }
 
         // GET: Accounts/Details/5
@@ -155,6 +156,7 @@ namespace TestProjectWeb.Controllers
             }
 
             try
+
             {
                 account.Sum += sum;
                 account.Histories.Add(new History
