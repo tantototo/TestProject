@@ -39,8 +39,29 @@ namespace TestSendMail.Services
                 };
 
                 channel.BasicConsume(queue: _messengerSettings.Queue,
-                    autoAck: true, //false,
+                    autoAck: false,
                     consumer: consumer);
+            }
+        }
+
+        public async Task PublishMessage(string message)
+        {
+            var factory = new ConnectionFactory() { HostName = "localhost" };
+            using (var connection = factory.CreateConnection())
+            using (var channel = connection.CreateModel())
+            {
+                channel.QueueDeclare(_messengerSettings.Queue,
+                    _messengerSettings.Durable,
+                    _messengerSettings.Exclusive,
+                    _messengerSettings.AutoDelete,
+                    _messengerSettings.Arguments);
+
+                var body = Encoding.UTF8.GetBytes(message);
+
+                channel.BasicPublish(exchange: _messengerSettings.Exchange,
+                    routingKey: "",
+                    basicProperties: null,
+                    body: body);
             }
         }
     }

@@ -36,8 +36,15 @@ namespace TestSendMail.Controllers
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
+        }
+
+        [HttpPost("PublishMessage")]
+        public async Task<IActionResult> PublishMessage(string message)
+        {
+            await _messageServices.PublishMessage(message);
+            return NoContent();
         }
     }
 }
