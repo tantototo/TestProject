@@ -49,7 +49,7 @@ namespace TestSendMail.Services
             client.Authenticate(_mailSettings.Mail, _mailSettings.Password);
             await client.SendAsync(message);
             client.Disconnect(true);
-            client.Dispose();
+            //client.Dispose();
         }
     }
 }
